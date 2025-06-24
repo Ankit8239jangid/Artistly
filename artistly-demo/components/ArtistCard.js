@@ -13,7 +13,7 @@ export function ArtistCard({ name, location, image, price, category, rating = "4
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </div>
       
-      <div className="absolute top-3 right-3">
+      <div className="absolute md:top-3 top-32 right-1">
         <span className="bg-purple-600 text-white px-3 py-1 rounded-full text-[10px] font-medium flex items-center gap-1">
           <Music className="w-2 h-2" />
           {category}
@@ -22,7 +22,7 @@ export function ArtistCard({ name, location, image, price, category, rating = "4
 
       <div className="p-5 space-y-3">
         <div className="flex justify-between items-start">
-          <h3 className="text-xl font-semibold text-gray-800 group-hover:text-purple-600 transition-colors">
+          <h3 className="md:text-xl text-sm font-semibold text-gray-800 group-hover:text-purple-600 transition-colors">
             {name}
           </h3>
           <div className="flex items-center text-yellow-500">

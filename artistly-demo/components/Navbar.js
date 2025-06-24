@@ -16,15 +16,15 @@ const Navbar = () => {
   ]
 
   return (
-    <nav className=" bg-white shadow-md fixed top-0 w-full z-50">
+    <nav className="bg-white shadow-md fixed top-0 w-full z-50" role="navigation" aria-label="Main Navigation">
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex-shrink-0">
-            <Link href="/" className="flex items-center">
-              <span className="text-2xl font-bold text-purple-600">Artistly</span>
-            </Link>
-          </div>
+          <Link href="/" className="flex items-center" aria-label="Artistly Home">
+            <span className="text-2xl font-bold text-purple-600">Artistly</span>
+          </Link>
+
 
           {/* Desktop Navigation */}
           <div className="hidden md:block">
@@ -45,14 +45,16 @@ const Navbar = () => {
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-purple-600 focus:outline-none"
-            >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
+
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className=" md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-purple-600 focus:outline-none"
+            aria-label={isOpen ? "Close menu" : "Open menu"} // ✅ ADD THIS
+          >
+
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+
         </div>
       </div>
 
@@ -70,7 +72,7 @@ const Navbar = () => {
                 {link.title}
               </Link>
             ))}
-            <button className="w-full bg-purple-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-purple-700 transition-colors">
+            <button type="button" className="w-full bg-purple-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-purple-700 transition-colors">
               Sign In
             </button>
           </div>

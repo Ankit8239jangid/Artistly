@@ -56,7 +56,7 @@ export default function ArtistOnboardingForm() {
     }
   };
 
-  const renderCheckbox = (id, checked) => (
+  const renderCheckbox = (checked) => (
     <div className="h-5 w-5 border border-gray-300 rounded bg-white flex items-center justify-center">
       {checked && <div className="w-3 h-3 bg-purple-600 rounded" />}
     </div>
@@ -67,6 +67,7 @@ export default function ArtistOnboardingForm() {
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="max-w-4xl mx-auto bg-white shadow-2xl rounded-2xl overflow-hidden"
+        aria-label="Artist onboarding form"
       >
         <div className="bg-purple-600 px-8 py-6 text-white">
           <h2 className="text-3xl font-bold">Artist Onboarding</h2>
@@ -76,45 +77,34 @@ export default function ArtistOnboardingForm() {
         <div className="p-8 space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-3">
-              <Label className="flex items-center gap-2 text-base">
+              <Label htmlFor="name" className="flex items-center gap-2 text-base">
                 <User className="w-4 h-4" />
                 Name
               </Label>
-              <Input 
-                placeholder="Enter full name" 
-                {...register("name")}
-                className="h-12 text-base"
-              />
-              <p className="text-sm text-red-500">{errors.name?.message}</p>
+              <Input id="name" placeholder="Enter full name" {...register("name")} />
+              <p role="alert" className="text-sm text-red-500">{errors.name?.message}</p>
             </div>
 
             <div className="space-y-3">
-              <Label className="flex items-center gap-2 text-base">
+              <Label htmlFor="location" className="flex items-center gap-2 text-base">
                 <MapPin className="w-4 h-4" />
                 Location
               </Label>
-              <Input 
-                placeholder="City, State" 
-                {...register("location")}
-                className="h-12 text-base"
-              />
-              <p className="text-sm text-red-500">{errors.location?.message}</p>
+              <Input id="location" placeholder="City, State" {...register("location")} />
+              <p role="alert" className="text-sm text-red-500">{errors.location?.message}</p>
             </div>
           </div>
 
           <div className="space-y-3">
-            <Label className="flex items-center gap-2 text-base">
+            <Label htmlFor="bio" className="flex items-center gap-2 text-base">
               <FileText className="w-4 h-4" />
               Bio
             </Label>
-            <Textarea 
-              placeholder="Tell us about yourself..." 
-              {...register("bio")}
-              className="min-h-[120px] text-base"
-            />
-            <p className="text-sm text-red-500">{errors.bio?.message}</p>
+            <Textarea id="bio" placeholder="Tell us about yourself..." {...register("bio")} />
+            <p role="alert" className="text-sm text-red-500">{errors.bio?.message}</p>
           </div>
 
+          {/* Category */}
           <div className="space-y-4">
             <Label className="flex items-center gap-2 text-base">
               <Tag className="w-4 h-4" />
@@ -127,31 +117,40 @@ export default function ArtistOnboardingForm() {
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   {categoriesList.map((cat) => {
                     const isChecked = field.value.includes(cat);
+                    const toggle = () => {
+                      const newValue = isChecked
+                        ? field.value.filter((val) => val !== cat)
+                        : [...field.value, cat];
+                      field.onChange(newValue);
+                    };
                     return (
                       <div
                         key={cat}
-                        className={`flex items-center gap-3 p-4 rounded-lg border-2 transition-all cursor-pointer
-                          ${isChecked
-                            ? 'border-purple-500 bg-purple-50'
-                            : 'border-gray-200 hover:border-purple-200'}`}
-                        onClick={() => {
-                          const newValue = isChecked
-                            ? field.value.filter((val) => val !== cat)
-                            : [...field.value, cat];
-                          field.onChange(newValue);
+                        role="checkbox"
+                        aria-checked={isChecked}
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === " " || e.key === "Enter") {
+                            e.preventDefault();
+                            toggle();
+                          }
                         }}
+                        onClick={toggle}
+                        className={`flex items-center gap-3 p-4 rounded-lg border-2 transition-all cursor-pointer
+                          ${isChecked ? 'border-purple-500 bg-purple-50' : 'border-gray-200 hover:border-purple-200'}`}
                       >
-                        {renderCheckbox(cat, isChecked)}
-                        <Label htmlFor={cat} className="cursor-pointer">{cat}</Label>
+                        {renderCheckbox(isChecked)}
+                        <span>{cat}</span>
                       </div>
                     );
                   })}
                 </div>
               )}
             />
-            <p className="text-sm text-red-500">{errors.category?.message}</p>
+            <p role="alert" className="text-sm text-red-500">{errors.category?.message}</p>
           </div>
 
+          {/* Languages */}
           <div className="space-y-4">
             <Label className="flex items-center gap-2 text-base">
               <Globe className="w-4 h-4" />
@@ -164,38 +163,48 @@ export default function ArtistOnboardingForm() {
                 <div className="flex flex-wrap gap-3">
                   {languagesList.map((lang) => {
                     const isChecked = field.value.includes(lang);
+                    const toggle = () => {
+                      const newValue = isChecked
+                        ? field.value.filter((val) => val !== lang)
+                        : [...field.value, lang];
+                      field.onChange(newValue);
+                    };
                     return (
                       <div
                         key={lang}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-full border-2 transition-all cursor-pointer
-                          ${isChecked
-                            ? 'border-purple-500 bg-purple-50'
-                            : 'border-gray-200 hover:border-purple-200'}`}
-                        onClick={() => {
-                          const newValue = isChecked
-                            ? field.value.filter((val) => val !== lang)
-                            : [...field.value, lang];
-                          field.onChange(newValue);
+                        role="checkbox"
+                        aria-checked={isChecked}
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === " " || e.key === "Enter") {
+                            e.preventDefault();
+                            toggle();
+                          }
                         }}
+                        onClick={toggle}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-full border-2 transition-all cursor-pointer
+                          ${isChecked ? 'border-purple-500 bg-purple-50' : 'border-gray-200 hover:border-purple-200'}`}
                       >
-                        {renderCheckbox(lang, isChecked)}
-                        <Label htmlFor={lang} className="cursor-pointer">{lang}</Label>
+                        {renderCheckbox(isChecked)}
+                        <span>{lang}</span>
                       </div>
                     );
                   })}
                 </div>
               )}
             />
-            <p className="text-sm text-red-500">{errors.languages?.message}</p>
+            <p role="alert" className="text-sm text-red-500">{errors.languages?.message}</p>
           </div>
 
+          {/* Fee */}
           <div className="space-y-3">
-            <Label className="flex items-center gap-2 text-base">
+            <Label htmlFor="feeRange" className="flex items-center gap-2 text-base">
               <Currency className="w-4 h-4" />
               Fee Range
             </Label>
-            <select 
-              {...register("feeRange")} 
+            <select
+              id="feeRange"
+              {...register("feeRange")}
               className="w-full h-12 border-2 rounded-lg px-4 text-base focus:border-purple-500 outline-none"
             >
               <option value="">Select fee range</option>
@@ -203,28 +212,30 @@ export default function ArtistOnboardingForm() {
                 <option key={fee} value={fee}>{fee}</option>
               ))}
             </select>
-            <p className="text-sm text-red-500">{errors.feeRange?.message}</p>
+            <p role="alert" className="text-sm text-red-500">{errors.feeRange?.message}</p>
           </div>
 
+          {/* Profile Image */}
           <div className="space-y-4">
-            <Label className="flex items-center gap-2 text-base">
+            <Label htmlFor="profileImage" className="flex items-center gap-2 text-base">
               <Upload className="w-4 h-4" />
               Profile Image
             </Label>
             <div className="flex items-center gap-6">
               <div className="flex-1">
-                <Input 
-                  type="file" 
-                  accept="image/*" 
+                <Input
+                  id="profileImage"
+                  type="file"
+                  accept="image/*"
                   onChange={handleImageChange}
                   className="h-12"
                 />
               </div>
               {formData.imagePreview && (
-                <img 
-                  src={formData.imagePreview} 
-                  alt="Preview" 
-                  className="h-24 w-24 rounded-lg object-cover border-2 border-purple-200" 
+                <img
+                  src={formData.imagePreview}
+                  alt="Profile preview"
+                  className="h-24 w-24 rounded-lg object-cover border-2 border-purple-200"
                 />
               )}
             </div>
@@ -232,8 +243,9 @@ export default function ArtistOnboardingForm() {
         </div>
 
         <div className="px-8 py-6 bg-gray-50 border-t">
-          <Button 
-            type="submit" 
+          <Button
+            type="submit"
+            aria-label="Submit artist profile"
             className="w-full h-12 text-lg bg-purple-600 hover:bg-purple-700"
           >
             Submit Artist Profile
